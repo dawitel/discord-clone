@@ -19,7 +19,7 @@ export const initialProfile = async () => {
   if (profile) {
     return profile;
   }
-  // else create one
+  // else create one with data from clerk 
   const newProfile = await db.profile.create({
     data: {
       userId: user.id,
