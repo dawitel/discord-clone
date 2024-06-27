@@ -1,5 +1,6 @@
 "use client";
 import * as z from "zod";
+import axios from "axios"
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -24,8 +25,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import FileUpload from "@/components/FileUpload";
+import { useRouter } from "next/navigation";
 
-type Props = {};
+type InitialModalProps = {};
 
 // form schema using zod
 const formSchema = z.object({
@@ -37,14 +39,16 @@ const formSchema = z.object({
   }),
 });
 
-export const InitialModal = (props: Props) => {
+export const InitialModal = (props: InitialModalProps) => {
+  const router = useRouter();
+  
   // fix hydration error
   const [isMounted, setIsMounted] = useState(false)
   
   useEffect(() =>{
     setIsMounted(true)
   }, [])
-
+  
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,7 +59,16 @@ export const InitialModal = (props: Props) => {
 
   const isLoading = form.formState.isSubmitting;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    // infer the type of the values from the formSchema using zod
+    try {
+      await axios.post("/api/servers", values)
+
+      form.reset()
+      router.refresh();
+      window.location.reload()
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   // fix hydration error

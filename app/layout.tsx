@@ -8,8 +8,8 @@ const font = Open_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title:
-    "Discord | Fullstack discord clone made by Dawit Elias, a junior fullstack dev",
-  description: "Fullstack discord clone by Dawit Elias, a junior fullstack dev",
+    "Discord | Fullstack discord clone made by Dawit Elias, junior fullstack dev",
+  description: "Fullstack discord clone by Dawit Elias, junior fullstack dev",
   icons: {
     icon: "/icon.ico",
   },
