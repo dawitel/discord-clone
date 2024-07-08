@@ -1,9 +1,9 @@
-import { create } from "zustand"
+// import { create } from "zustand"
 
-export type ModalStore = {
+// export type ModalStore = {
 
-}
+// }
 
-const useModalStore = create<ModalStore>({
+// const useModalStore = create<ModalStore>({
 
-})
+// })
