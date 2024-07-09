@@ -42,7 +42,7 @@ const formSchema = z.object({
 export const InitialModal = (props: InitialModalProps) => {
   const router = useRouter();
   
-  // fix hydration error
+  // fix hydration error deprecated 
   const [isMounted, setIsMounted] = useState(false)
   
   useEffect(() =>{
