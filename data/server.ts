@@ -294,3 +294,31 @@ export const CreateChannel = async (
   });
   return server;
 };
+
+export const LeaveFromServer = async (
+  serverId: string,
+  profileId: string
+) => {
+  const server = await db.server.update({
+    where: {
+      id: serverId,
+      profileId: {
+        not: profileId
+      },
+      members: {
+        some: {
+          profileId
+        }
+      }
+    },
+    data: {
+      members: {
+        deleteMany: {
+          profileId
+        }
+      }
+    }
+  })
+
+  return server
+};
