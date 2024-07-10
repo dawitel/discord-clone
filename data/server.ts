@@ -1,6 +1,6 @@
 import { ProfileType } from "@/constants/types";
 import { db } from "@/lib/db";
-
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * @description Gets server for a user with a given profile
@@ -61,6 +61,70 @@ export const getServerDetailsById = async (serverId: string) => {
         },
         orderBy: {
           role: "asc",
+        },
+      },
+    },
+  });
+  return server;
+};
+/**
+ * @description update a server with an invite code
+ * @param serverId string
+ * @param profileId string
+ * @returns server object
+ */
+export const UpdateServerInviteCode = async (
+  serverId: string,
+  profileId: string
+) => {
+  const server = await db.server.update({
+    where: {
+      id: serverId,
+      profileId,
+    },
+    data: {
+      inviteCode: uuidv4(),
+    },
+  });
+
+  return server;
+};
+
+/**
+ * @description Check if a user is member of the server with the current invite code
+ * @param inviteCode string
+ * @param profileId string
+ * @returns server object
+ */
+export const IsUserMemberWithInviteCode = async (
+  inviteCode: string,
+  profileId: string
+) => {
+  const existingServer = await db.server.findFirst({
+    where: {
+      inviteCode,
+      members: {
+        some: {
+          profileId,
+        },
+      },
+    },
+  });
+  return existingServer;
+};
+
+export const CreateMemberWithInviteCode = async (
+  inviteCode: string,
+  profileId: string
+) => {
+  const server = await db.server.update({
+    where: {
+      inviteCode,
+    },
+    data: {
+      members: {
+        create: {
+          profileId,
         },
       },
     },
