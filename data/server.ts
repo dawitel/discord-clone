@@ -1,6 +1,6 @@
 import { ProfileType } from "@/constants/types";
 import { db } from "@/lib/db";
-import { MemberRole } from "@prisma/client";
+import { ChannelType, MemberRole } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 
 /**
@@ -249,6 +249,45 @@ export const KickMemberFromServer = async (
         },
         orderBy: {
           role: "asc",
+        },
+      },
+    },
+  });
+  return server;
+};
+
+/**
+ * @description Create a channel in a server with a data
+ * @param name string
+ * @param type ChannelType - "TEXT" | "AUDIO" | "VIDEO"
+ * @param serverId string
+ * @param profileId string
+ * @returns updated server object
+ */
+export const CreateChannel = async (
+  name: string,
+  type: ChannelType,
+  serverId: string,
+  profileId: string
+) => {
+  const server = await db.server.update({
+    where: {
+      id: serverId,
+      members: {
+        some: {
+          profileId,
+          role: {
+            in: [MemberRole.ADMIN, MemberRole.MODERATOR],
+          },
+        },
+      },
+    },
+    data: {
+      channels: {
+        create: {
+          profileId,
+          name,
+          type,
         },
       },
     },
