@@ -113,6 +113,12 @@ export const IsUserMemberWithInviteCode = async (
   return existingServer;
 };
 
+/**
+ * @description Add a user with a profile id to a server with a server id
+ * @param inviteCode string
+ * @param profileId string
+ * @returns updated server object
+ */
 export const CreateMemberWithInviteCode = async (
   inviteCode: string,
   profileId: string
@@ -127,6 +133,33 @@ export const CreateMemberWithInviteCode = async (
           profileId,
         },
       },
+    },
+  });
+  return server;
+};
+
+/**
+ * @description Update data of a server
+ * @param serverId strind
+ * @param name strind
+ * @param imageUrl strind
+ * @param profileId strind
+ * @returns updated server object
+ */
+export const UpdateServer = async (
+  serverId: string,
+  name: string,
+  imageUrl: string,
+  profileId: string
+) => {
+  const server = await db.server.update({
+    where: {
+      id: serverId,
+      profileId,
+    },
+    data: {
+      name,
+      imageUrl,
     },
   });
   return server;
