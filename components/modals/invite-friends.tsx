@@ -15,9 +15,9 @@ import { CheckCircle, Copy, RefreshCw } from "lucide-react";
 import { useOrigin } from "@/hooks/use-origin";
 import axios from "axios";
 
-type CreateServerModalProps = {};
+type InviteModalProps = {};
 
-export const InviteModal = (props: CreateServerModalProps) => {
+export const InviteModal = (props: InviteModalProps) => {
   const { isOpen, onClose, type, data, onOpen } = useModal();
   const origin = useOrigin();
   const { server } = data;

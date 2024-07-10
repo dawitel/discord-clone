@@ -1,5 +1,6 @@
 import { ProfileType } from "@/constants/types";
 import { db } from "@/lib/db";
+import { MemberRole } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 
 /**
@@ -160,6 +161,96 @@ export const UpdateServer = async (
     data: {
       name,
       imageUrl,
+    },
+  });
+  return server;
+};
+
+/**
+ * @description update the role of a member using the data
+ * @param serverId string
+ * @param profileId string
+ * @param memberId string
+ * @param role MemberRole "GUEST" | "ADMIN" | "MODERATOR"
+ * @returns Updated server object
+ */
+export const UpdateMemberRole = async (
+  serverId: string,
+  profileId: string,
+  memberId: string,
+  role: MemberRole
+) => {
+  const server = await db.server.update({
+    where: {
+      id: serverId,
+      profileId,
+    },
+    data: {
+      members: {
+        update: {
+          where: {
+            id: memberId,
+            profileId: {
+              not: profileId,
+            },
+          },
+          data: {
+            role,
+          },
+        },
+      },
+    },
+    include: {
+      members: {
+        include: {
+          profile: true,
+        },
+        orderBy: {
+          role: "asc",
+        },
+      },
+    },
+  });
+
+  return server;
+};
+
+/**
+ * @description Remove a member from a server
+ * @param serverId string
+ * @param memberId string
+ * @param profileId string
+ * @returns updated server object
+ */
+export const KickMemberFromServer = async (
+  serverId: string,
+  memberId: string,
+  profileId: string
+) => {
+  const server = await db.server.update({
+    where: {
+      id: serverId,
+      profileId,
+    },
+    data: {
+      members: {
+        deleteMany: {
+          id: memberId,
+          profileId: {
+            not: profileId,
+          },
+        },
+      },
+    },
+    include: {
+      members: {
+        include: {
+          profile: true,
+        },
+        orderBy: {
+          role: "asc",
+        },
+      },
     },
   });
   return server;
