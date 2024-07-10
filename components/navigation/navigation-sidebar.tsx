@@ -1,5 +1,4 @@
 import { currentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
 import { UserButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
@@ -8,6 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { ModeToggle } from '@/components/ModeToggle'
 import { NavigationAction } from "./navigation-action";
 import { NavigationItem } from "./navigation-item";
+import { getServerByProfile } from "@/data/users";
 
 export const NavigationSidebar = async () => {
   const profile = await currentProfile();
@@ -15,15 +15,7 @@ export const NavigationSidebar = async () => {
     return redirect("/");
   }
 
-  const servers = await db.server.findMany({
-    where: {
-      members: {
-        some: {
-          profileId: profile.id,
-        },
-      },
-    },
-  });
+  const servers = await getServerByProfile(profile)
 
   return (
     <div className="space-y-4 flex flex-col items-center h-full text-primary w-full dark:bg-[#1E1F22] py-3">

@@ -47,7 +47,7 @@ export const NavigationItem = ({
                     <Image 
                         src={imageUrl} 
                         fill
-                        alt={name}
+                        alt={name}  
                     />
                 </div>
             </button>    
