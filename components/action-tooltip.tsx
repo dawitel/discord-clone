@@ -15,6 +15,18 @@ interface ActionToolTipProps {
   align?: "start" | "center" | "end";
 }
 
+/**
+ * @description When hovered over a component it tels what it does using the label
+ * 
+ * @param label
+ * @param children
+ * @param side
+ * @param align
+ * 
+ * @returns provider for hover action 
+ */
+
+// TODO: add timing
 export const ActionToolTip = ({
   label,
   children,

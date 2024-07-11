@@ -1,8 +1,8 @@
 "use client";
 import * as z from "zod";
-import axios from "axios"
+import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import {
@@ -26,8 +26,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import FileUpload from "@/components/FileUpload";
 import { useRouter } from "next/navigation";
+import { useModal } from "@/hooks/use-modal-store";
 
-type InitialModalProps = {};
+type EditServerModalProps = {};
 
 // form schema using zod
 const formSchema = z.object({
@@ -39,16 +40,9 @@ const formSchema = z.object({
   }),
 });
 
-export const InitialModal = (props: InitialModalProps) => {
+export const EditServerModal = (props: EditServerModalProps) => {
+  const { isOpen, onClose, onOpen, type, data } = useModal();
   const router = useRouter();
-  
-  // fix hydration error deprecated 
-  const [isMounted, setIsMounted] = useState(false)
-  
-  useEffect(() =>{
-    setIsMounted(true)
-  }, [])
-  
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,25 +51,35 @@ export const InitialModal = (props: InitialModalProps) => {
     },
   });
 
+  const isModalOpen = isOpen && type === "editServer";
+  const {server} = data
+  const handleClose = () => {
+    form.reset();
+    onClose();
+  };
+
+  useEffect(()=>{
+    if(server){
+      form.setValue("name", server.name)
+      form.setValue("imageUrl", server.imageUrl)
+    }
+  },[form, server])
+
   const isLoading = form.formState.isSubmitting;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     // infer the type of the values from the formSchema using zod
     try {
-      await axios.post("/api/servers", values)
-
-      form.reset()
+      await axios.patch(`/api/servers/${server?.id}`, values);
+      form.reset();
       router.refresh();
-      window.location.reload()
+      onClose()
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
-  // fix hydration error
-  if(!isMounted) return null;
-  
   return (
-    <Dialog open>
+    <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-white p-0 overflow-hidden text-black">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl font-bold text-center">
@@ -90,19 +94,19 @@ export const InitialModal = (props: InitialModalProps) => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="space-y-8 px-6">
               <div className="flex items-center justify-center text-center">
-                <FormField 
+                <FormField
                   control={form.control}
                   name="imageUrl"
-                  render={({field}) => (
+                  render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <FileUpload 
+                        <FileUpload
                           onChange={field.onChange}
                           value={field.value}
                           endpoint="serverImage"
                         />
                       </FormControl>
-                    </FormItem>   
+                    </FormItem>
                   )}
                 />
               </div>
@@ -122,15 +126,15 @@ export const InitialModal = (props: InitialModalProps) => {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className="text-red-500 text-xs font-bold"/>
+                    <FormMessage className="text-red-500 text-xs font-bold" />
                   </FormItem>
                 )}
               />
             </div>
             <DialogFooter className="bg-gray-100 px-6 py-4">
-                <Button disabled={isLoading} variant="primary">
-                  Create
-                </Button>
+              <Button disabled={isLoading} variant="primary">
+                Save
+              </Button>
             </DialogFooter>
           </form>
         </Form>
