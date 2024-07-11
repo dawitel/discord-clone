@@ -418,3 +418,31 @@ export const UpdateChannel = async (
   // });
   // return server
 };
+
+export const getGeneralChannel = async (
+  serverId: string,
+  profileId: string,
+  
+) => {
+  const server = await db.server.findUnique({
+    where: {
+      id: serverId,
+      members: {
+        some: {
+          profileId,
+        },
+      },
+    },
+    include: {
+      channels: {
+        where: {
+          name: "general"
+        },
+      },
+    },
+  });
+
+  const initialChannel = server?.channels[0]
+
+  return initialChannel;
+};
