@@ -1,0 +1,27 @@
+import { UpdateServerInviteCode } from "@/data/server";
+import { currentProfile } from "@/lib/current-profile";
+import { NextResponse } from "next/server";
+
+interface props {
+  req: Request;
+  params: { serverId: string };
+}
+
+export async function PATCH({ params, req }: props) {
+  try {
+    const profile = await currentProfile();
+    if (!profile) {
+      return new NextResponse("Unauthorized ", { status: 401 });
+    }
+
+    if (!params.serverId) {
+      return new NextResponse("Server ID missing ", { status: 400 });
+    }
+
+    const server = await UpdateServerInviteCode(params.serverId, profile.id);
+    return NextResponse.json(server);
+  } catch (error) {
+    console.log("[SERVER_ID_PATCH] ", error);
+    return new NextResponse("Internal Error ", { status: 500 });
+  }
+}
