@@ -1,6 +1,8 @@
 export { CreateChannelModal } from "@/components/modals/create-channel";
+export { EditChannelModal } from "@/components/modals/edit-channel";
 export { CreateServerModal } from "@/components/modals/create-server";
 export { DeleteServerModal } from "@/components/modals/delete-server";
+export { DeleteChannelModal } from "@/components/modals/delete-channel";
 export { EditServerModal } from "@/components/modals/edit-server";
 export { InviteModal } from "@/components/modals/invite-friends";
 export { LeaveServerModal } from "@/components/modals/leave-server";

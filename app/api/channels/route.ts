@@ -2,16 +2,16 @@ import { CreateChannel } from "@/data/server";
 import { currentProfile } from "@/lib/current-profile";
 import { NextResponse } from "next/server";
 
-interface POSTParams {
+interface Params {
   req: Request;
 }
 
-export async function POST({ req }: POSTParams) {
+export async function POST({ req }: Params) {
   try {
     const profile = await currentProfile();
     const { name, type } = await req.json();
     const { searchParams } = new URL(req.url);
-
+    
     const serverId = searchParams.get("serverId");
     if (!profile) return new NextResponse("Unauthorized", { status: 401 });
     if (!serverId) {
@@ -27,3 +27,5 @@ export async function POST({ req }: POSTParams) {
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
+
+

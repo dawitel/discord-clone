@@ -326,6 +326,12 @@ export const LeaveFromServer = async (serverId: string, profileId: string) => {
   return server;
 };
 
+/**
+ * @description Delet a server with a given serverId
+ * @param serverId string
+ * @param profileId string
+ * @returns updated server object
+ */
 export const DeleteServer = async (serverId: string, profileId: string) => {
   const server = await db.server.delete({
     where: {
@@ -334,4 +340,81 @@ export const DeleteServer = async (serverId: string, profileId: string) => {
     },
   });
   return server;
+};
+
+/**
+ * @description Delete a channel from a server
+ * @param serverId string
+ * @param channelId string
+ * @param profileId string
+ * @returns updated server object
+ */
+export const DeleteChannel = async (
+  serverId: string,
+  channelId: string,
+  profileId: string
+) => {
+  const server = await db.server.update({
+    where: {
+      id: serverId,
+      members: {
+        some: {
+          profileId,
+          role: {
+            in: [MemberRole.ADMIN, MemberRole.MODERATOR],
+          },
+        },
+      },
+    },
+    data: {
+      channels: {
+        delete: {
+          id: channelId,
+          name: {
+            not: "general",
+          },
+        },
+      },
+    },
+  });
+  return server;
+};
+
+export const UpdateChannel = async (
+  name: string,
+  type: string,
+  serverId: string,
+  channelId: string,
+  profileId: string
+) => {
+  // const server = await db.server.update({
+  //   where: {
+  //     id: serverId,
+  //     members: {
+  //       some: {
+  //         profileId,
+  //         role: {
+  //           in: [MemberRole.ADMIN, MemberRole.MODERATOR],
+  //         },
+  //       },
+  //     },
+  //   },
+  //   data: {
+  //     channels: {
+  //       update: {
+  //         where: {
+  //           id: channelId,
+  //           NOT: {
+  //             name: "general",
+  //           },
+  //         },
+  //         data: {
+  //           name,
+  //           type
+  //         }
+  //       }
+  //     },
+  //   },
+  // });
+  // return server
 };
