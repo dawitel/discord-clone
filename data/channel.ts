@@ -10,4 +10,12 @@ export const getTextChannel = async (server: ServerType) => {
   return textChannels;
 };
 
+export const getChannelById = async (channelId: string) => {
+  const channel = await db.channel.findUnique({
+    where: {
+      id: channelId,
+    },
+  });
 
+  return channel;
+};
