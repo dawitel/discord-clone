@@ -1,3 +1,4 @@
+"use client"
 import { ServerWithMembersWithProfiles } from "@/constants/types";
 import { MemberRole } from "@prisma/client";
 import React from "react";
