@@ -4,14 +4,20 @@ import { db } from "@/lib/db";
 import { MemberRole } from "@prisma/client";
 import { NextResponse } from "next/server";
 
-interface Params {
-  req: Request;
-  params: {
-    channelId: string;
-  };
-}
+// interface Params {
+//   req: Request;
+//   params: {
+//     channelId: string;
+//   };
+// }
 
-export async function DELETE({ req, params }: Params) {
+export async function DELETE({
+  req,
+  params,
+}: {
+  req: Request;
+  params: { channelId: string };
+}) {
   try {
     if (!params.channelId) {
       return new NextResponse("Channel ID missing", { status: 400 });
@@ -34,7 +40,13 @@ export async function DELETE({ req, params }: Params) {
   }
 }
 
-export async function PATCH({ params, req }: Params) {
+export async function PATCH({
+  req,
+  params,
+}: {
+  req: Request;
+  params: { channelId: string };
+}) {
   try {
     if (!params.channelId) {
       return new NextResponse("Channel ID missing", { status: 400 });
