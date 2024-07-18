@@ -1,19 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 
-/**
- * @description Get the current URL of the rendered page 
- * @returns origin current URL
- */
 export const useOrigin = () => {
-  const [isMounted, setIsMounted] = useState<boolean>(false);
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
-    setIsMounted(true);
+    setMounted(true);
   }, []);
 
-  const origin =
-    typeof window !== "undefined" && window.location.origin
-      ? window.location.origin
-      : "";
-  if (!isMounted) return "";
+  const origin = typeof window !== "undefined" && window.location.origin ? window.location.origin : "";
+
+  if (!mounted) {
+    return "";
+  }
+
   return origin;
-};
+}

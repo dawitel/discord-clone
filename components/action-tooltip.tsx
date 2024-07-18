@@ -6,44 +6,32 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ReactNode } from "react";
 
-interface ActionToolTipProps {
+interface ActionTooltipProps {
   label: string;
-  children: ReactNode;
+  children: React.ReactNode;
   side?: "top" | "right" | "bottom" | "left";
   align?: "start" | "center" | "end";
 }
 
-/**
- * @description When hovered over a component it tels what it does using the label
- * 
- * @param label
- * @param children
- * @param side
- * @param align
- * 
- * @returns provider for hover action 
- */
-
-// TODO: add timing
-export const ActionToolTip = ({
+export const ActionTooltip = ({
   label,
   children,
   side,
-  align,
-}: ActionToolTipProps) => {
-    return (
+  align
+}: ActionTooltipProps) => {
+  return (
     <TooltipProvider>
-        <Tooltip delayDuration={50}>
-            <TooltipTrigger asChild>
-                {children}
-            </TooltipTrigger>    
-            <TooltipContent side={side} align={align}>
-                <p className="font-semibold text-sm capitalize">
-                    {label.toLowerCase()}
-                </p>
-            </TooltipContent>
-        </Tooltip>    
-    </TooltipProvider>)
-};
+      <Tooltip delayDuration={50}>
+        <TooltipTrigger asChild>
+          {children}
+        </TooltipTrigger>
+        <TooltipContent side={side} align={align}>
+          <p className="font-semibold text-sm capitalize">
+            {label.toLowerCase()}
+          </p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  )
+}
